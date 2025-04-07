@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Diesel Prices API - Usage Plan and API Key
+
+Resources:
+
+  DieselApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: DieselAPIKey
+      Enabled: true
+
+  DieselUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: DieselUsagePlan
+      ApiStages:
+        - ApiId: !ImportValue DieselApiId
+          Stage: Prod
+      Throttle:
+        RateLimit: 10
+        BurstLimit: 2
+
+  DieselUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref DieselApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref DieselUsagePlan
+
+Outputs:
+  ApiKey:
+    Description: "API Key for accessing the Diesel Prices API"
+    Value: !Ref DieselApiKey

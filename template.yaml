@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Diesel Prices API with GET and POST, id as random primary key
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 10
+    MemorySize: 128
+
+Resources:
+
+  DieselPricesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: DieselPrices
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: period
+          AttributeType: S
+        - AttributeName: duoarea
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: PeriodIndex
+          KeySchema:
+            - AttributeName: period
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: DuoAreaIndex
+          KeySchema:
+            - AttributeName: duoarea
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: DuoareaPeriodIndex
+          KeySchema:
+            - AttributeName: duoarea
+              KeyType: HASH
+            - AttributeName: period
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  DieselApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: DieselApi
+      StageName: Prod
+      Auth:
+        ApiKeyRequired: true
+
+  DieselPricesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DieselPricesFunction
+      CodeUri: ./src/
+      Handler: app.lambda_handler
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:Query
+                - dynamodb:Scan
+              Resource:
+                - !GetAtt DieselPricesTable.Arn
+                - !Sub "${DieselPricesTable.Arn}/index/*"
+        - AWSLambdaBasicExecutionRole
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DieselPricesTable
+      Events:
+        GetAPI:
+          Type: Api
+          Properties:
+            Path: /diesel-prices
+            Method: GET
+            RestApiId: !Ref DieselApiGateway
+            Auth:
+              ApiKeyRequired: true
+        PostAPI:
+          Type: Api
+          Properties:
+            Path: /diesel-prices
+            Method: POST
+            RestApiId: !Ref DieselApiGateway
+            Auth:
+              ApiKeyRequired: true
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint for Diesel Prices"
+    Value: !Sub "https://${DieselApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/diesel-prices"

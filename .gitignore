@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+secrets.env
+
+# SAM
+.aws-sam/
+build/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+EOF
+# files
+eia_final_flat.csv
+eia_final_raw.json
+data.json
+sample.json
