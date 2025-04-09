@@ -89,6 +89,14 @@ These scripts help you prepare and load data into the DynamoDB table.
 you need a key to download the data we are using.
  - https://www.eia.gov/opendata/register.php, 
 
+add it to `get_data.py`
+```python
+...
+# get you a akey 
+# https://www.eia.gov/opendata/register.php, 
+API_KEY = ""
+..
+```
 
 ### Download Raw Data
 
