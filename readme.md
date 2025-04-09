@@ -2,6 +2,11 @@
 
 This project provides a serverless API for managing diesel fuel prices using AWS SAM (Serverless Application Model), DynamoDB, Lambda, and API Gateway. It includes infrastructure as code, deployment scripts, and data seeding utilities.
 
+## AWS Stack
+
+![DIESEL API stack](https://hackmd.io/_uploads/H1xukIQ01e.png)
+
+
 ---
 
 ## 🔧 Requirements
