@@ -4,7 +4,7 @@ This project provides a serverless API for managing diesel fuel prices using AWS
 
 ## AWS Stack
 
-![DIESEL API stack](https://hackmd.io/_uploads/H1xukIQ01e.png)
+![DIESEL API stack](diagram.png)
 
 
 ---
