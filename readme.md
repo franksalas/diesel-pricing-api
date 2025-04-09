@@ -19,6 +19,7 @@ This project provides a serverless API for managing diesel fuel prices using AWS
 ├── Makefile
 ├── template-base.yml              # SAM template for base stack (Lambda, API, DynamoDB)
 ├── template-usage-plan.yml        # CloudFormation template for usage plan + API key
+├── requirements.txt               # requirements file
 ├── scripts/
 │   ├── get_data.py                # Script to download diesel pricing data
 │   ├── clean_data.py              # Script to clean and format the data
@@ -84,6 +85,10 @@ make delete-usage
 ## 📊 Data Management
 
 These scripts help you prepare and load data into the DynamoDB table.
+## go to EIA.gov
+you need a key to download the data we are using.
+ - https://www.eia.gov/opendata/register.php, 
+
 
 ### Download Raw Data
 
@@ -135,7 +140,7 @@ curl -X GET \
 
 ## 🧹 Cleanup
 
-Don’t forget to run `make delete-all` to avoid incurring AWS charges if you're done testing.
+Don’t forget to run `make delete-all` to avoid incurring AWS charges if you're done testing dummy.
 
 ---
 
